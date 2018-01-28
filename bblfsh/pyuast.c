@@ -26,13 +26,8 @@ static size_t Size(const void *node, const char *prop) {
 }
 
 static PyObject *ItemAt(PyObject *object, int index) {
-  PyObject *retval = NULL;
   PyObject *seq = PySequence_Fast(object, "expected a sequence");
-  if (seq != NULL) {
-    retval = PyList_GET_ITEM(seq, index);
-    Py_DECREF(seq);
-  }
-  return retval;
+  return PyList_GET_ITEM(seq, index);
 }
 
 
