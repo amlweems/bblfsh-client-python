@@ -195,5 +195,19 @@ class BblfshTests(unittest.TestCase):
         self.assertEqual(next(results).token, "docker")
 
 
+    def testManyFilters(self):
+        root = self.client.parse(__file__).uast
+        root.properties['k1'] = 'v2'
+        root.properties['k2'] = 'v1'
+
+        import resource
+        before = resource.getrusage(resource.RUSAGE_SELF)
+        for _ in range(100):
+            filter(root, "//*[@roleIdentifier]")
+        after = resource.getrusage(resource.RUSAGE_SELF)
+
+        # Check that memory usage has not doubled after running the filter
+        self.assertLess(after[2] / before[2], 2.0)
+
 if __name__ == "__main__":
     unittest.main()
